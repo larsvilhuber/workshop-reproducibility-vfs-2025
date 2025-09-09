@@ -1,8 +1,9 @@
 ---
-title: "Tutorial reproducibility"
+title: "Workshop on  Open Science VfS 2025"
 author: 
   - "Lars Vilhuber"
-date: 1 September  2025
+  - "Levent Neyse"
+date: 16 September  2025
 editor_options: 
   chunk_output_type: console
 ---
@@ -45,15 +46,10 @@ WEBSITE_URL <- paste0("https://", GITHUB_REPOSITORY_PARTS[1], ".github.io/", GIT
 QUALTRICS_FULL_URL <- "https://cornell.yul1.qualtrics.com/jfe/form"
 QUALTRICS_DAY1 <- "SV_bBqbJ9cSSJdOBw2"
 
-# Public Qualtrics URL for day 2
-
-QUALTRICS_DAY2 <- "SV_cNkhKL69K2Ob7o2"
-
 # Time when this was posted (discard anything before that)
 
-QUALTRICS_DAY1_STIME <- ymd_hms("2025-08-31 23:59:00")
-QUALTRICS_DAY2_STIME <- ymd_hms("2025-08-31 21:59:00")
-QUALTRICS_DAY2_ETIME <- ymd_hms("2025-10-24 23:59:00")
+QUALTRICS_DAY1_STIME <- ymd_hms("2025-09-08 23:59:00")
+QUALTRICS_DAY2_ETIME <- ymd_hms("2025-09-16 23:59:00")
 
 if (!dir.exists(here::here("data"))) {
   dir.create(here::here("data"))
@@ -103,17 +99,19 @@ data <- data.raw |>
         filter(StartDate > QUALTRICS_DAY1_STIME & EndDate < QUALTRICS_DAY2_ETIME) |>
   # renaming variables
   select(StartDate,EndDate,Status,Finished,RecordedDate,ResponseId,Consent,Degree,JEL_primary,
+        replicationpackage,preregistration,  
          starts_with("JEL_secondary"),starts_with("Desktop _"),starts_with("Advanced_usage_"),
          starts_with("Programming_"),starts_with("Versioning_")) 
 
 
 ```
 
+#### Education
+
 ```{r create_table1, results='asis', include=TRUE,echo=FALSE,message=FALSE}
 
 if ( nrow(data) >0 ) {
 
-cat("\n**Education**\n\n")
 data |>
   select(Degree,Finished) |>
   group_by(Degree) |>
@@ -127,15 +125,47 @@ data |>
 data.table |>
   kable() |>
   footnote(general = "Percent is calculated as the proportion of completed responses.")
+} else {
+  cat("No data yet. Check back later.")
 }
+
 ```
+
+#### Open Science practices
+
+
+```{r create_table3, results='asis', include=TRUE,echo=FALSE,message=FALSE}
+
+ 
+# Open Science practices
+if ( nrow(data) >0 ) {
+
+data |>
+  filter(Finished == TRUE) |>
+  select(replicationpackage,preregistration) |>
+  summarize( Freq1= sum(replicationpackage == "Yes",na.rm = TRUE),
+             Freq2   = sum(preregistration == "Yes",na.rm = TRUE),
+            N = n()) |>
+  mutate(
+    `Replication package` = round(Freq1 / N * 100, 2),
+    `Pre-registration`= round(Freq2    / N * 100, 2),
+    ` ` = "Open Science Practices"
+  )  |>
+  select(` `, N , `Replication package`, `Pre-registration`) |>
+  kable() |>
+  footnote(general = "Percent is calculated as the proportion of completed responses.")
+}
+
+```
+
+#### Operating System
 
 ```{r create_table2, results='asis', include=TRUE,echo=FALSE,message=FALSE}
 
 # Tables for use of operating system (`Desktop _`(n), 3 categories), command line (Advanced_usage_1), 
 if ( nrow(data) >0 ) {
 
-cat("\n**Operating System**\n\n")
+#cat("\n**Operating System**\n\n")
 data |>
   filter(Finished == TRUE) |>
   select(starts_with("Desktop _")) |>
@@ -161,31 +191,6 @@ data |>
 }
 ```
 
-
-```{r create_table3, results='asis', include=TRUE,echo=FALSE,message=FALSE}
-
-if ( nrow(data) >0 ) {
-
-cat("\n**Command Line Usage**\n\n")
-data |>
-  filter(Finished == TRUE) |>
-  summarise(
-    `Command line used` = sum(`Advanced_usage_1` == TRUE, na.rm = TRUE),
-    `System with more than 6 CPUs` = sum(`Advanced_usage_4` == TRUE, na.rm = TRUE)
-  ) |>
-  pivot_longer(everything(), names_to = "Feature", values_to = "Frequency") |>
-  mutate(
-    Percent = round(Frequency / sum(data$Finished == TRUE, na.rm = TRUE) * 100, 2)
-  ) |>
-  kable() |>
-  footnote(general = "Completed responses only.")
-
-
-} else {
-  cat("No data yet. Check back later.")
-}
-
-```
 
 
 ##  Part 1
