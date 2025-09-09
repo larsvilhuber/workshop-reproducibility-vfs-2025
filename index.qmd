@@ -63,12 +63,6 @@ if (!dir.exists(here::here("data"))) {
 ::: {.panel-tabset}
 
 
-## Survey 1
-
-Please fill out this survey on background and skills, to provide us with information on who you are. It will help us improve the presentation, and make it more relevant for you.
-
-<`r file.path(QUALTRICS_FULL_URL,QUALTRICS_DAY1)`>
-
 ## Follow along
 
 ```{r qrcode}
@@ -79,17 +73,20 @@ plot(code)
 
 ```
 
+
+## Survey 1
+
+Please fill out this survey on background and skills, to provide us with information on who you are. It will help us improve the presentation, and make it more relevant for you.
+
+<`r file.path(QUALTRICS_FULL_URL,QUALTRICS_DAY1)`>
+
+## While you wait
+
+[![](./images/Screenshot_os_video.png)](https://www.youtube.com/watch?v=EWclIBQpBVs)
+
 ## Intro
 
 [Intro](slides/index.html)
-
-
-## Day 1
-
-One of the following (or a linear combination):
-
-- [Setting yourself up for reproducibility](https://larsvilhuber.github.io/day1-tutorial/)
-- [How to correctly document a replication package](https://larsvilhuber.github.io/readme-presentation/)
 
 ### Results from Survey 1
 
@@ -191,66 +188,23 @@ data |>
 ```
 
 
-## Day 2
+##  Part 1
 
-One of the following (or a linear combination):
+motivate why science needs collaborative efforts/ to build on prior work.
+
+- the 2D:4D (digit ratio) and cognitive reflection literature, where we ran many studies in the past years.
+- Lessons learned This part helps me explain basic concepts in a research based, applied manner, rather than giving textbook definitions. (I like that!) (I presume intro to pre-registration, what it is, why the ability to understand prior research also relies on nitty gritty details)
+-  Explain what is pre-registration, when to use it, how widespread.
+
+## Part 2
+
+- requirements, data and code availability policies, replication  packages [slides](https://larsvilhuber.github.io/summer-school-qicss-2025/presentation/presentation.html#/what-is)
+- What does that mean in practice [slides](https://larsvilhuber.github.io/readme-presentation/)
+
+Additional information
 
 - [Reproducibility when some data are confidential](https://labordynamicsinstitute.github.io/reproducibility-confidential/) 
 - [Advanced self-checking of reproducibility](https://larsvilhuber.github.io/self-checking-reproducibility/presentation/)
-- Preserving raw survey data early in research lifecycle (ethically!)
-
-### Survey 2
-
-To identify what we should be speaking about on Day 2, please fill out [this other survey](`r file.path(QUALTRICS_FULL_URL,QUALTRICS_DAY2)`):
-
-<`r file.path(QUALTRICS_FULL_URL,QUALTRICS_DAY2)`>
-
-### Results from Survey 2
-
-*Last updated: `r format(Sys.time(), "%d %B %Y, %H:%M")`*
-
-```{r downloaddata2,include=FALSE}
-# download data to local location
-
-data2.raw <- fetch_survey(surveyID = QUALTRICS_DAY2, verbose = TRUE) 
-data2 <- data2.raw |>
-        filter(Status != "Survey Preview") |>
-        filter(Consent == "I agree that my data will be used in the manner described.") |>
-        filter(StartDate > QUALTRICS_DAY2_STIME & EndDate < QUALTRICS_DAY2_ETIME) |>
-  # renaming variables
-  select(StartDate,EndDate,Status,Finished,RecordedDate,ResponseId,Consent,Preferred_topic,Degree,JEL_primary,
-         starts_with("JEL_secondary"),starts_with("Versioning_"))
-
-
-```
-
-```{r create_table22, results='asis', include=TRUE,echo=FALSE,message=FALSE}
-
-if ( nrow(data2) >0 ) {
-data2 |>
-  select(Preferred_topic) |>
-  group_by(Preferred_topic) |>
-  summarise(Frequency=n()) |>
-  ungroup() |>
-  mutate(Percent = round(Frequency/nrow(data2)*100,2)) -> data2.table
-
-data2.table |> kable()
-} else {
-  cat("No data yet. Check back later.")
-}
-```
-
-
-
-
-## Day 3
-
-The last day serves to review the various materials, handle any questions not addressed (in detail) on the previous days, and discuss experiences and difficulties applying these principles in your work.
-
-Topics may include:
-
-- [Advanced self-checking of reproducibility](https://larsvilhuber.github.io/self-checking-reproducibility/presentation/) (the more technical parts)
-- Preserving raw survey data early in research lifecycle (ethically!)
 - [Reproducibility for LLM and AI](https://larsvilhuber.github.io/reproducibility-for-llm/presentation/)
 
 
