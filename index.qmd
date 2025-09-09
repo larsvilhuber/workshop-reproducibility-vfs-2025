@@ -1,0 +1,263 @@
+---
+title: "Tutorial reproducibility"
+author: 
+  - "Lars Vilhuber"
+date: 1 September  2025
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r config,include=FALSE}
+library(readr)
+library(here)
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(qualtRics)
+library(lubridate)
+library(qrcode)
+library(kableExtra)
+library(tidylog)
+
+# qualtRics secrets are read from the environment:
+# - QUALTRICS_API_KEY
+# - QUALTRICS_BASE_URL
+# Let's check that they are there:
+
+message(Sys.getenv("QUALTRICS_BASE_URL"))
+
+# The repository name
+
+message(Sys.getenv("GITHUB_REPOSITORY"))
+
+# Process the repository name to generate the URL
+# - split the two components
+# - combine them into a URL with 'github.io' in the middle
+
+GITHUB_REPOSITORY <- Sys.getenv("GITHUB_REPOSITORY")
+GITHUB_REPOSITORY_PARTS <- strsplit(GITHUB_REPOSITORY, "/")[[1]]
+REPOSITORY_URL <- paste0("https://github.com/", GITHUB_REPOSITORY)
+WEBSITE_URL <- paste0("https://", GITHUB_REPOSITORY_PARTS[1], ".github.io/", GITHUB_REPOSITORY_PARTS[2])
+
+# Qualtrics data for Day 1:
+# you can find this with all_surveys() %>% arrange(creationDate) %>% head()
+
+QUALTRICS_FULL_URL <- "https://cornell.yul1.qualtrics.com/jfe/form"
+QUALTRICS_DAY1 <- "SV_bBqbJ9cSSJdOBw2"
+
+# Public Qualtrics URL for day 2
+
+QUALTRICS_DAY2 <- "SV_cNkhKL69K2Ob7o2"
+
+# Time when this was posted (discard anything before that)
+
+QUALTRICS_DAY1_STIME <- ymd_hms("2025-08-31 23:59:00")
+QUALTRICS_DAY2_STIME <- ymd_hms("2025-08-31 21:59:00")
+QUALTRICS_DAY2_ETIME <- ymd_hms("2025-10-24 23:59:00")
+
+if (!dir.exists(here::here("data"))) {
+  dir.create(here::here("data"))
+}
+```
+
+::: {.panel-tabset}
+
+
+## Survey 1
+
+Please fill out this survey on background and skills, to provide us with information on who you are. It will help us improve the presentation, and make it more relevant for you.
+
+<`r file.path(QUALTRICS_FULL_URL,QUALTRICS_DAY1)`>
+
+## Follow along
+
+```{r qrcode}
+#| echo: false
+
+code <- qr_code(WEBSITE_URL)
+plot(code)
+
+```
+
+## Intro
+
+[Intro](slides/index.html)
+
+
+## Day 1
+
+One of the following (or a linear combination):
+
+- [Setting yourself up for reproducibility](https://larsvilhuber.github.io/day1-tutorial/)
+- [How to correctly document a replication package](https://larsvilhuber.github.io/readme-presentation/)
+
+### Results from Survey 1
+
+*Last updated: `r format(Sys.time(), "%d %B %Y, %H:%M")`*
+
+```{r downloaddata,include=FALSE}
+# download data to local location
+
+data.raw <- fetch_survey(surveyID = QUALTRICS_DAY1, verbose = TRUE) 
+data <- data.raw |>
+        mutate(StartDate <- ymd_hms(StartDate)) |>
+        filter(Status != "Survey Preview") |>
+        filter(Consent == "I agree that my data will be used in the manner described.") |>
+        filter(StartDate > QUALTRICS_DAY1_STIME & EndDate < QUALTRICS_DAY2_ETIME) |>
+  # renaming variables
+  select(StartDate,EndDate,Status,Finished,RecordedDate,ResponseId,Consent,Degree,JEL_primary,
+         starts_with("JEL_secondary"),starts_with("Desktop _"),starts_with("Advanced_usage_"),
+         starts_with("Programming_"),starts_with("Versioning_")) 
+
+
+```
+
+```{r create_table1, results='asis', include=TRUE,echo=FALSE,message=FALSE}
+
+if ( nrow(data) >0 ) {
+
+cat("\n**Education**\n\n")
+data |>
+  select(Degree,Finished) |>
+  group_by(Degree) |>
+  summarise(
+    Frequency = n(),
+    `Frequency (Complete)` = sum(Finished == TRUE, na.rm = TRUE)
+  ) |>
+  ungroup() |>
+  mutate(Percent = round(`Frequency (Complete)`/nrow(data)*100,2)) -> data.table
+
+data.table |>
+  kable() |>
+  footnote(general = "Percent is calculated as the proportion of completed responses.")
+}
+```
+
+```{r create_table2, results='asis', include=TRUE,echo=FALSE,message=FALSE}
+
+# Tables for use of operating system (`Desktop _`(n), 3 categories), command line (Advanced_usage_1), 
+if ( nrow(data) >0 ) {
+
+cat("\n**Operating System**\n\n")
+data |>
+  filter(Finished == TRUE) |>
+  select(starts_with("Desktop _")) |>
+  # _1 = Windows, _2 = Mac, _3 = Linux
+  # Each field is NA if not ticked.
+  pivot_longer(cols = starts_with("Desktop _"), names_to = "OS", values_to = "Used") |>
+  # remap  Desktop _1 = Windows, _2 = Mac, _3 = Linux
+  mutate(OS = recode(OS,
+                    "Desktop _1" = "Windows",
+                    "Desktop _2" = "Mac",
+                    "Desktop _3" = "Linux")) |>
+  filter(!is.na(Used)) |>
+  group_by(OS) |>
+  # Frequency and percentages
+  summarise(
+    Frequency = n()
+  ) |>
+  mutate(
+    Percent = round(Frequency / sum(data$Finished == TRUE, na.rm = TRUE) * 100, 2)
+  )  |>
+  kable() |>
+  footnote(general = "Completed responses only. Multiple mentions possible.")
+}
+```
+
+
+```{r create_table3, results='asis', include=TRUE,echo=FALSE,message=FALSE}
+
+if ( nrow(data) >0 ) {
+
+cat("\n**Command Line Usage**\n\n")
+data |>
+  filter(Finished == TRUE) |>
+  summarise(
+    `Command line used` = sum(`Advanced_usage_1` == TRUE, na.rm = TRUE),
+    `System with more than 6 CPUs` = sum(`Advanced_usage_4` == TRUE, na.rm = TRUE)
+  ) |>
+  pivot_longer(everything(), names_to = "Feature", values_to = "Frequency") |>
+  mutate(
+    Percent = round(Frequency / sum(data$Finished == TRUE, na.rm = TRUE) * 100, 2)
+  ) |>
+  kable() |>
+  footnote(general = "Completed responses only.")
+
+
+} else {
+  cat("No data yet. Check back later.")
+}
+
+```
+
+
+## Day 2
+
+One of the following (or a linear combination):
+
+- [Reproducibility when some data are confidential](https://labordynamicsinstitute.github.io/reproducibility-confidential/) 
+- [Advanced self-checking of reproducibility](https://larsvilhuber.github.io/self-checking-reproducibility/presentation/)
+- Preserving raw survey data early in research lifecycle (ethically!)
+
+### Survey 2
+
+To identify what we should be speaking about on Day 2, please fill out [this other survey](`r file.path(QUALTRICS_FULL_URL,QUALTRICS_DAY2)`):
+
+<`r file.path(QUALTRICS_FULL_URL,QUALTRICS_DAY2)`>
+
+### Results from Survey 2
+
+*Last updated: `r format(Sys.time(), "%d %B %Y, %H:%M")`*
+
+```{r downloaddata2,include=FALSE}
+# download data to local location
+
+data2.raw <- fetch_survey(surveyID = QUALTRICS_DAY2, verbose = TRUE) 
+data2 <- data2.raw |>
+        filter(Status != "Survey Preview") |>
+        filter(Consent == "I agree that my data will be used in the manner described.") |>
+        filter(StartDate > QUALTRICS_DAY2_STIME & EndDate < QUALTRICS_DAY2_ETIME) |>
+  # renaming variables
+  select(StartDate,EndDate,Status,Finished,RecordedDate,ResponseId,Consent,Preferred_topic,Degree,JEL_primary,
+         starts_with("JEL_secondary"),starts_with("Versioning_"))
+
+
+```
+
+```{r create_table22, results='asis', include=TRUE,echo=FALSE,message=FALSE}
+
+if ( nrow(data2) >0 ) {
+data2 |>
+  select(Preferred_topic) |>
+  group_by(Preferred_topic) |>
+  summarise(Frequency=n()) |>
+  ungroup() |>
+  mutate(Percent = round(Frequency/nrow(data2)*100,2)) -> data2.table
+
+data2.table |> kable()
+} else {
+  cat("No data yet. Check back later.")
+}
+```
+
+
+
+
+## Day 3
+
+The last day serves to review the various materials, handle any questions not addressed (in detail) on the previous days, and discuss experiences and difficulties applying these principles in your work.
+
+Topics may include:
+
+- [Advanced self-checking of reproducibility](https://larsvilhuber.github.io/self-checking-reproducibility/presentation/) (the more technical parts)
+- Preserving raw survey data early in research lifecycle (ethically!)
+- [Reproducibility for LLM and AI](https://larsvilhuber.github.io/reproducibility-for-llm/presentation/)
+
+
+
+
+```{r, child=c(here::here('99-links.md'))}
+```
+
+:::
+
