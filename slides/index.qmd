@@ -1,6 +1,7 @@
 ---
-title: "Reproducibility Tutorial"
+title: "Intro slides"
 author: 
+  - "Levent Neyse"
   - "Lars Vilhuber"
 date: June 22 2025
 format: 
@@ -28,9 +29,6 @@ format:
 
 
 
-```{r, child=c(here::here("slides",'00-whoami.md'))}
+```{r, child=c(here::here("slides",'00-whoarewe.md'))}
 ```
 
-
-```{r, child=c(here::here("slides",'02-reproducibility-extra.md'))}
-```

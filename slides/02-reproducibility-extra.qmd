@@ -1,3 +1,31 @@
+---
+title: "Data and Code Transparency in Economics"
+author: 
+  - "Lars Vilhuber"
+date: Sept 16 2025
+format: 
+  revealjs:
+    scrollable: true
+    margin: 0
+    code-overflow: wrap
+    reference-location: document
+    widescreen: true
+    center: true
+    transition: slide
+    theme: [night, style.css]
+    self_contained: false
+    logo: logo.png
+    footer: ""
+    reveal_options:
+        slideNumber: true
+        previewLinks: false
+        chalkboard:
+          theme: chalkboard
+          toggleNotesButton: true
+    reveal_plugins: ["chalkboard"]
+
+---
+
 # Data and Code Transparency in Economics
 
 ## Transparency
