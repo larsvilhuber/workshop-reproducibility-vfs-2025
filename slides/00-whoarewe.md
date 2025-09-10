@@ -23,7 +23,7 @@
 
 Behavioral economist studying how people make economic and social decisions, as well as meta-scientific topics such as replicability and research transparency. 
 
- [SOEP Innovation Sample](https://www.diw.de/en/diw_01.c.601784.en/soep-is_innovative_modules.html) at [DIW Berlin](https://www.diw.de/en),  co-PI of the [Lab$^2$ metascience lab](https://www.labsquare.net/).
+Lead for [SOEP Innovation Sample](https://www.diw.de/en/diw_01.c.601784.en/soep-is_innovative_modules.html) at [DIW Berlin](https://www.diw.de/en),  co-PI of the [Lab$^2$ metascience lab](https://www.labsquare.net/) @ [WZB Berlin](https://wzb.eu/en)
 
 :::
 ::: {.column width="50%"}
