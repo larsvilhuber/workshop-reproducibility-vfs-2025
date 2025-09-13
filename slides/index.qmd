@@ -32,3 +32,20 @@ format:
 ```{r, child=c(here::here("slides",'00-whoarewe.md'))}
 ```
 
+## Part 1
+
+[slides](here::here("slides","VfS_Workshop_Neyse.pdf"))
+
+## Part 2
+
+
+```{r, child=c(here::here("slides",'02-reproducibility.md'))}
+```
+
+```{r, child=c(here::here("slides",'02-reproducibility-extra.md'))}
+```
+
+## Next 
+
+- [Reproducibility from the start](https://larsvilhuber.github.io/day1-tutorial/#/scenario)
+- [Documenting it all](https://larsvilhuber.github.io/readme-presentation/)

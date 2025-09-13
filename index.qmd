@@ -195,18 +195,24 @@ data |>
 
 ##  Part 1
 
-motivate why science needs collaborative efforts/ to build on prior work.
 
-- the 2D:4D (digit ratio) and cognitive reflection literature, where we ran many studies in the past years.
-- Lessons learned This part helps me explain basic concepts in a research based, applied manner, rather than giving textbook definitions. (I like that!) (I presume intro to pre-registration, what it is, why the ability to understand prior research also relies on nitty gritty details)
--  Explain what is pre-registration, when to use it, how widespread.
+-  Why results don't always replicate — and what we learned from big tests: a quick tour of failure points, plus lessons from 2D:4D and CRT conceptual replications.
+- Your open-science toolkit in action: preregistration & pre-analysis plans, registered reports, and crowdscience (many labs/designs/analysts) to make findings robust and credible.
+-  What's next for collaborative economics: building global infrastructures for reliable research—capped with fresh insights from the VfS Open Science Survey.
+
+
 
 ## Part 2
 
-- requirements, data and code availability policies, replication  packages [slides](https://larsvilhuber.github.io/summer-school-qicss-2025/presentation/presentation.html#/what-is)
-- What does that mean in practice [slides](https://larsvilhuber.github.io/readme-presentation/)
+Implementing transparency and reproducibility in practice
 
-Additional information
+- requirements, data and code availability policies, replication  packages [slides](https://larsvilhuber.github.io/summer-school-qicss-2025/presentation/presentation.html#/what-is)
+- What does that mean in practice 
+
+
+
+
+### Additional information
 
 - [Reproducibility when some data are confidential](https://labordynamicsinstitute.github.io/reproducibility-confidential/) 
 - [Advanced self-checking of reproducibility](https://larsvilhuber.github.io/self-checking-reproducibility/presentation/)
