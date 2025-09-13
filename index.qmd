@@ -200,16 +200,17 @@ data |>
 - Your open-science toolkit in action: preregistration & pre-analysis plans, registered reports, and crowdscience (many labs/designs/analysts) to make findings robust and credible.
 -  What's next for collaborative economics: building global infrastructures for reliable research—capped with fresh insights from the VfS Open Science Survey.
 
+[slides](slides/index.html#/part-1))
 
 
 ## Part 2
 
 Implementing transparency and reproducibility in practice
 
-- requirements, data and code availability policies, replication  packages [slides](https://larsvilhuber.github.io/summer-school-qicss-2025/presentation/presentation.html#/what-is)
+- requirements, data and code availability policies, replication  packages 
 - What does that mean in practice 
 
-
+[slides](slides/index.html#/part-2))
 
 
 ### Additional information

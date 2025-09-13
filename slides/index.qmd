@@ -34,9 +34,34 @@ format:
 
 ## Part 1
 
-[slides](here::here("slides","VfS_Workshop_Neyse.pdf"))
+::::{.columns}
+::: {.column width="50%"}
+
+![**Levent Neyse**](images/levent-neyse.jpg)
+
+:::
+::: {.column width="50%"}
+
+[![slides](images/VfS_Workshop_Neyse-0.png)](VfS_Workshop_Neyse.pdf)
+
+:::
+::::
 
 ## Part 2
+
+::::{.columns}
+::: {.column width="50%"}
+
+![](images/Screenshot-part2.png)
+
+:::
+::: {.column width="50%"}
+
+![**Lars Vilhuber**](images/lv39-2014.jpg)
+
+:::
+::::
+
 
 
 ```{r, child=c(here::here("slides",'02-reproducibility.md'))}
@@ -44,6 +69,26 @@ format:
 
 ```{r, child=c(here::here("slides",'02-reproducibility-extra.md'))}
 ```
+
+## Elsewhere: Newer! {.smaller}
+
+::::{.columns}
+
+:::{.column width="50%"}
+
+- [Experimental Economics](https://www.cambridge.org/core/journals/experimental-economics/information/journal-policies/research-transparency)
+- [German Economic Review](https://www.degruyterbrill.com/journal/key/ger/html#supplementaryMaterials)
+- [Revue Economique](https://reveco.hypotheses.org/) (soon! bientôt!)
+:::
+
+:::{.column width="50%"}
+
+![Experimental Economics](images/Screenshot-experimental-economics.png)
+
+:::
+
+::::
+
 
 ## Next 
 

@@ -75,6 +75,7 @@ None
 - [Western Economic Association International](https://weai.org/view/EI-Journal-Policies) (1)
 - [European Economic Association](http://www.eeassoc.org/journal) (1)
 - [Review of Economic Studies](https://www.restud.com/) (1)
+- [Journal of Political Economy](https://www.journals.uchicago.edu/journals/jpe/about) (3)
 
 :::
 
